@@ -1,9 +1,30 @@
 // Use dotenv to run local instances with env variables
 require('dotenv').config({path: './.env'});
 const request = require("request");
-const fs = require('fs'); // file structure for downloading files and reading etc. 
 
-const file = fs.createWriteStream('emails-13.csv'); // add in unique naming conventions after. Also find somewhere to store files rather than on local directory. 
+// Initializing csv read/write tools - fs, fast-csv, etc.
+// FAST-CSV
+const fs = require('fs') // file structure library for downloading files and reading etc. 
+const csv = require('fast-csv');
+const data = [] // stays empty and will console log as empty even after adding new file. unless a file is already there then
+
+const downloadFile = fs.createWriteStream('emails-13.csv'); // add in unique naming conventions after. Also find somewhere to store files rather than on local directory. 
+// https://www.makeuseof.com/node-js-csv-files-read-how/
+const readFile = fs.readFile('emails-13.csv', 'utf8', function (err, data) {
+        // parse data  
+})
+// const readline = require("readline");
+// const stream = fs.createReadStream("./emails-13.csv");
+// const rl = readline.createInterface({ input: stream });
+
+// Creating temporary readstream for csv reading // move this out of this function after
+    // rl.on("line", (row) => {
+    //     data.push(row.split(","));    
+    // });
+                    
+    // rl.on("close", () => {
+    //     console.log(`83 --- CSV DATA: ${data}`);
+    // });
 
 let getWebhook = (req, res) => {
     // Verify token. Should be a random string
@@ -51,22 +72,33 @@ let postWebhook = (req, res) => {
                 .flatMap(messaging => messaging.message.attachments)
                 .find(attachment => attachment.type === "file")
                 .payload.url;
-            console.log(`51 - URL : ${url}`);
+            // console.log(`51 - URL : ${url}`);
 
             // get the sender PSID
             let sender_psid = webhook_event.sender.id;
-            console.log(`Sender PSID: ${sender_psid}`)
 
-                    
+            // Download the CSV to local directory 
             let downloadCSV = (req, res) => {
                 request.get(url)
-                .pipe(file)
+                .on('response', () => { // response listener added to wait for response from url before trying to read the file thats being downloaded
+                    console.log("File is downloading...")
+
+                    // Creating the read stream to work with each entry individually. 
+                    fs.createReadStream('./emails-13.csv')
+                    .pipe(csv.parse({ headers: true }))
+                    .on('error', error => console.error(error))
+                    .on('data', row => data.push(row))
+                    .on('end', () => console.log(`92 --- CSV DATA:${data}`));
+                })
+                .pipe(downloadFile)
                 .on('finish', () => {
                     console.log('File successfully downloaded');
-                })
+                });
             }
+            
+            downloadCSV(); // calling the function 
 
-            downloadCSV();
+             
         })
 
         // returns '200 OK' response to all requests

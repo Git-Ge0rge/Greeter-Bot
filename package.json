@@ -6,5 +6,23 @@
     "fast-csv": "^4.3.6",
     "fs": "^0.0.1-security",
     "request": "^2.88.2"
-  }
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "name": "greeter-bot",
+  "description": "## Workplace by Meta - Custom Integration",
+  "version": "1.0.0",
+  "main": "app-gh.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Git-Ge0rge/Greeter-Bot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Git-Ge0rge/Greeter-Bot/issues"
+  },
+  "homepage": "https://github.com/Git-Ge0rge/Greeter-Bot#readme"
 }

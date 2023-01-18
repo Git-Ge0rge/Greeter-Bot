@@ -52,4 +52,5 @@ To check if user exist in the workplace we will have to use the /user endpoint o
 
 ### Next Steps / Ice Box Features
 
-- To be added.
+- Bug: An issue I faced was the fact that the file was being downloaded simultaneously with the csv file being read and pushed to the data variable
+  - Solution: The addition of the response function to wait for the file to be downloaded before pushing to the data array helped to fix that.
