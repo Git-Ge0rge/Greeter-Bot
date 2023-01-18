@@ -1,6 +1,9 @@
 // Use dotenv to run local instances with env variables
 require('dotenv').config({path: './.env'});
-const request = require("request"); 
+const request = require("request");
+const fs = require('fs'); // file structure for downloading files and reading etc. 
+
+const file = fs.createWriteStream('emails-13.csv'); // add in unique naming conventions after. Also find somewhere to store files rather than on local directory. 
 
 let getWebhook = (req, res) => {
     // Verify token. Should be a random string
@@ -50,27 +53,31 @@ let postWebhook = (req, res) => {
                 .payload.url;
             console.log(`51 - URL : ${url}`);
 
-            
-            // let url = body.entry.map(entry => entry.messaging)
-            //     .flat() // The flat() method creates a new array with all sub-array elements concatenated into it recursively up to the specified depth
-            //     .map(messaging => messaging.message.attachments)
-            //     .flat()
-            //     .filter(attachment => attachment.type === "file")
-            //     .map(attachment => attachment.payload.url)
-            //     .pop();
-            // console.log(`51 - URL : ${url}`);
-
             // get the sender PSID
             let sender_psid = webhook_event.sender.id;
             console.log(`Sender PSID: ${sender_psid}`)
+
+                    
+            let downloadCSV = (req, res) => {
+                request.get(url)
+                .pipe(file)
+                .on('finish', () => {
+                    console.log('File successfully downloaded');
+                })
+            }
+
+            downloadCSV();
         })
 
         // returns '200 OK' response to all requests
         res.status(200).send('EVENT RECEIVED')
+
+
     } else {
         // Return a '404 Not Found' if event is not from a page subscription
         res.sendStatus(404);
     }
+
 }
 
 const  exportObject = {

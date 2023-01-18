@@ -27,6 +27,8 @@ To get this done, a few things need to happen. Let's break down this problem.
 
 **1. Accepting the CSV file:** We can use the multer middleware for Express to handle file uploads and accept a CSV file as input. In this specific use case, I would assume we would need to setup a webhook to grab the file from the messenger chat to be able to be read, manipulated, and have requests executed upon the stored data. (I ended up trying to configure a webhook via NGROK instead of using Multer as it did not fit this use case.)
 
+**1.5. CSV STORAGE:** Will we need to store the csv file anywhere while the file is being read, executed upon and overwritten? (AWS Bucket, google drive api etc.). Currently CSV files are being written to the local directory.
+
 **2. Reading the CSV file:** Once the chatbot has received the CSV file, it will need to be able to read the contents of the file. We can use a library like csv-parser or fast-csv to read the contents of the CSV file, which will give us an array of objects, where each object represents a row in the CSV file.
 
 **3. Sending the messages:** Once the chatbot has the list of email addresses, it will need to send a message to each one. To do this, we can use the Workplace Graph API.
