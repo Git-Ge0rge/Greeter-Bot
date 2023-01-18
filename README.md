@@ -39,7 +39,10 @@ To check if user exist in the workplace we will have to use the /user endpoint o
 
 ### Getting Started
 
-- To be added.
+- "/Users/george/Downloads/ngrok http 4040" to start up ngrok server. // /Users/george/Downloads/ngrok http --host-header=rewrite localhost:4040
+
+- Node App.js to start bot.
+- Auto start scripts to be added.
 
 ### Screenshots
 
