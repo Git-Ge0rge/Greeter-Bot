@@ -40,6 +40,26 @@ let postWebhook = (req, res) => {
             let webhook_event = entry.messaging[0]
             console.log(webhook_event)
 
+            // Grab url of .csv file
+            // The flat() method creates a new array with all sub-array elements concatenated into it recursively up to the specified depth
+            // flatmap() does the same and maps the item thereafter
+            let url = body.entry
+                .flatMap(entry => entry.messaging)
+                .flatMap(messaging => messaging.message.attachments)
+                .find(attachment => attachment.type === "file")
+                .payload.url;
+            console.log(`51 - URL : ${url}`);
+
+            
+            // let url = body.entry.map(entry => entry.messaging)
+            //     .flat() // The flat() method creates a new array with all sub-array elements concatenated into it recursively up to the specified depth
+            //     .map(messaging => messaging.message.attachments)
+            //     .flat()
+            //     .filter(attachment => attachment.type === "file")
+            //     .map(attachment => attachment.payload.url)
+            //     .pop();
+            // console.log(`51 - URL : ${url}`);
+
             // get the sender PSID
             let sender_psid = webhook_event.sender.id;
             console.log(`Sender PSID: ${sender_psid}`)
