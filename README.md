@@ -27,6 +27,7 @@ The original csv should have one column email and the returned csv should have t
 To get this done, a few things need to happen. Let's break down this problem.
 
 **1. Accepting the CSV file:** We can use the multer middleware for Express to handle file uploads and accept a CSV file as input. In this specific use case, I would assume we would need to setup a webhook to grab the file from the messenger chat to be able to be read, manipulated, and have requests executed upon the stored data. (I ended up trying to configure a webhook via NGROK instead of using Multer as it did not fit this use case.)
+NGROK took up the majority of my working time as It would not connect to the facebook webhook after multiple port changes and config adjustments. Finally got it to work the next day. (Wednesday)
 
 **1.5. CSV STORAGE:** Will we need to store the csv file anywhere while the file is being read, executed upon and overwritten? (AWS Bucket, google drive api etc.). Currently CSV files are being written to the local directory.
 
@@ -55,3 +56,4 @@ To check if user exist in the workplace we will have to use the /user endpoint o
 
 - Bug: An issue I faced was the fact that the file was being downloaded simultaneously with the csv file being read and pushed to the data variable
   - Solution: The addition of the response function to wait for the file to be downloaded before pushing to the data array helped to fix that.
+- Array for csv data continues to push to filled array. Once done with it's use case remember to reconfig the array as an empty array.
