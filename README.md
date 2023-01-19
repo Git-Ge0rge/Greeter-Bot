@@ -11,7 +11,8 @@ Greeter Bot is a great organizational tool used to clean out inactive users from
 - JavaScript
 - Node
 - Git
-- Fast-csv? node-csv?
+- Ngrok Webhook
+- Fast-csv
 
 ### Task
 
