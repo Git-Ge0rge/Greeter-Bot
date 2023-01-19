@@ -4,10 +4,11 @@ const axios = require('axios');
 // Calling ENV variables
 const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
 const FB_TOKEN = process.env.FB_TOKEN;
+const WORKPLACE_ID = "george" // figure out how to get workplace ID or find better enpoint. 
 
 const email = "george.haddad77@yahoo.com";
 
-const url = `GET https://graph.facebook.com/v14.0/george/search?type=user&q=${email}&access_token=${FB_TOKEN}`
+const url = `GET https://graph.facebook.com/v14.0/${WORKPLACE_ID}/search?type=user&q=${email}&access_token=${FB_TOKEN}`
 
 // add params for pass through of the forEach afterwards. Currently Hardcoded for my main email
 const userLookup = () => {
