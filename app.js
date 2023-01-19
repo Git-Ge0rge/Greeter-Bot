@@ -6,12 +6,13 @@ const bodyParser = require('body-parser');
 // Use dotenv to run local instances with env variables
 require('dotenv').config({path: './.env'})
 
-//config body-parser to post data
+//config body-parser to post data 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // calling external utilities
 const chatbotController = require("./chatbotController")
+const userService = require("./userService")
 
 // Calling ENV variables
 const
@@ -39,6 +40,11 @@ let initWebRoutes = (app) => {
   
   router.get("/webhook", chatbotController.getWebhook)
   router.post("/webhook", chatbotController.postWebhook)
+  router.get('/user', (req, res) => {
+    // call the userLookup function
+    userService.userLookup();
+    res.send('Searching for user...');
+});
 
   return app.use("/", router)
 }

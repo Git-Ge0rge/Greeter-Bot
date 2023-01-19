@@ -2,19 +2,23 @@
 require('dotenv').config({path: './.env'});
 const request = require("request");
 
+// Calling userService
+const userService = require("./userService")
+
+
 // Initializing csv read/write tools - fs, fast-csv, etc.
 // FAST-CSV
 const fs = require('fs') // file structure library for downloading files and reading etc. 
 const csv = require('fast-csv');
 const data = [] // stays empty and will console log as empty even after adding new file. unless a file is already there then
 
-const downloadFile = fs.createWriteStream('emails-13.csv'); // add in unique naming conventions after. Also find somewhere to store files rather than on local directory. 
+const downloadFile = fs.createWriteStream('emails-fb.csv'); // add in unique naming conventions after. Also find somewhere to store files rather than on local directory. 
 // https://www.makeuseof.com/node-js-csv-files-read-how/
-const readFile = fs.readFile('emails-13.csv', 'utf8', function (err, data) {
-        // parse data  
-})
+// const readFile = fs.readFile('emails-fb.csv', 'utf8', function (err, data) {
+//         // parse data  
+// })
 // const readline = require("readline");
-// const stream = fs.createReadStream("./emails-13.csv");
+// const stream = fs.createReadStream("./emails-fb.csv");
 // const rl = readline.createInterface({ input: stream });
 
 // Creating temporary readstream for csv reading // move this out of this function after
@@ -53,7 +57,7 @@ let getWebhook = (req, res) => {
 let postWebhook = (req, res) => {
     console.log(`req.body = ${req.body}`)
     let body = req.body;
-    console.log(`cb line 32 - ${body}`)
+    // console.log(`56 -- body: ${body}`)
 
     // Checks this is an event from a page subscription
     if (body.object === 'page') {
@@ -75,7 +79,7 @@ let postWebhook = (req, res) => {
             // console.log(`51 - URL : ${url}`);
 
             // get the sender PSID
-            let sender_psid = webhook_event.sender.id;
+            // let sender_psid = webhook_event.sender.id;
 
             // Download the CSV to local directory 
             let downloadCSV = (req, res) => {
@@ -84,21 +88,33 @@ let postWebhook = (req, res) => {
                     console.log("File is downloading...")
 
                     // Creating the read stream to work with each entry individually. 
-                    fs.createReadStream('./emails-13.csv')
-                    .pipe(csv.parse({ headers: true }))
-                    .on('error', error => console.error(error))
-                    .on('data', row => data.push(row))
-                    .on('end', () => console.log(`92 --- CSV DATA:${data}`));
+                    fs.createReadStream('./emails-fb.csv')
+                        .pipe(csv.parse({ headers: true }))
+                        .on('error', error => console.error(error))
+                        .on('data', row => data.push(row))
+                        .on('end', () => {
+                            data.forEach(object => {
+                                let parsedData = JSON.parse(JSON.stringify(object));
+                                console.log(`94 -- Parsed CSV: ${parsedData["email"]}`);
+    
+                            });
+                        });    
+
                 })
                 .pipe(downloadFile)
                 .on('finish', () => {
-                    console.log('File successfully downloaded');
+                    // doesn't run for some reason // (data.forEach( obj => console.log(`102 -- Parsed data object: ${JSON.parse(obj["email"])}`) )) // console logs emails from csv
+                    console.log('File successfully downloaded')
                 });
             }
-            
-            downloadCSV(); // calling the function 
 
-             
+            //Calling download function
+            downloadCSV()
+            console.log("113 - download complete")
+            
+            console.log("115 - userLookup complete")
+            data.forEach( obj => console.log(`114 -- Parsed data object: ${JSON.parse(obj["email"])}`) ); // console logs emails from csv
+
         })
 
         // returns '200 OK' response to all requests
@@ -109,7 +125,6 @@ let postWebhook = (req, res) => {
         // Return a '404 Not Found' if event is not from a page subscription
         res.sendStatus(404);
     }
-
 }
 
 const  exportObject = {
